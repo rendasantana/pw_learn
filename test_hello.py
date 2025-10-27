@@ -1,18 +1,7 @@
-from playwright.sync_api import sync_playwright
+import logging
 
-def test_open_google():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
-        page.goto("https://www.google.com")
-
-        # 🔍 Cek apakah URL yang terbuka benar
-        assert "google.com" in page.url
-
-        # 🔍 Cek apakah ada elemen input pencarian
-        page.fill("textarea[name='q']", "QA Automation Python")
-        page.keyboard.press("Enter")
-        page.wait_for_timeout(2000)
-        page.screenshot(path="hasil_pencarian.png")
-
-        browser.close()
+def test_open_google(page):
+    logging.info("Membuka halaman Google")
+    page.goto("https://www.google.com")
+    assert "Google" in page.title()
+    logging.info("Halaman Google terbuka dengan benar")
