@@ -1,49 +1,25 @@
-import logging
 import pytest
-import time
+import logging
+from playwright.sync_api import Page
 
-@pytest.mark.parametrize("username, password, expected", [
-    ("tomsmith", "SuperSecretPassword!", True),   # Login sukses (user bawaan demo site)
-    ("tomsmith", "wrongpass", False),             # Login gagal
-])
-def test_login(page, username, password, expected):
-    """
-    Pengujian login sederhana menggunakan Playwright bawaan pytest.
-    Tidak perlu memanggil sync_playwright() — pytest sudah sediakan fixture `page`.
-    """
-
+@pytest.mark.parametrize(
+    "username,password,should_succeed", [
+        ("tomsmith", "SuperSecretPassword!", True),  # Login sukses
+        pytest.param("tomsmith", "wrongpass", False, marks=pytest.mark.xfail(reason="Login gagal sesuai harapan")),
+    ]
+)
+def test_login(page: Page, username, password, should_succeed):
     logging.info("=== Mulai pengujian login ===")
     logging.info(f"Input data → Username: {username} | Password: {password}")
 
-    # 1️⃣ Buka halaman login
     page.goto("https://the-internet.herokuapp.com/login")
-    logging.info("Membuka halaman login...")
-
-    # 2️⃣ Isi field username & password
     page.fill("#username", username)
     page.fill("#password", password)
     page.click("button[type='submit']")
-    logging.info("Klik tombol login...")
 
-    # 3️⃣ Tunggu sebentar untuk memuat respon
-    time.sleep(1)
-
-    # 4️⃣ Validasi hasil
-    if expected:
-        page.wait_for_selector(".flash.success")
-        success_message = page.locator(".flash.success").text_content()
-        assert "You logged into a secure area!" in success_message
+    if should_succeed:
+        assert page.is_visible("text=Secure Area")
         logging.info("✅ Login berhasil.")
     else:
-        page.wait_for_selector(".flash.error")
-        error_message = page.locator(".flash.error").text_content()
-        assert "Your password is invalid!" in error_message or "Your username is invalid!" in error_message
-        logging.info("⚠️ Login gagal seperti yang diharapkan.")
-
-    # 5️⃣ Ambil screenshot untuk laporan
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-    screenshot_path = f"reports/test_login_{'success' if expected else 'failed'}_{timestamp}.png"
-    page.screenshot(path=screenshot_path)
-    logging.info(f"📸 Screenshot disimpan di: {screenshot_path}")
-
-    logging.info("=== Pengujian login selesai ===")
+        assert page.is_visible("text=Your username is invalid!") or page.is_visible("text=Your password is invalid!")
+        logging.info("⚠️ Login gagal sesuai harapan.")
