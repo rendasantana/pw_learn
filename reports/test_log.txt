@@ -1,3 +1,11 @@
 INFO     root:conftest.py:22 === Memulai sesi Playwright ===
 INFO     root:conftest.py:103 tests/test_form.py::TestFormInput::test_fill_form_success — ✅ PASSED
 INFO     root:conftest.py:103 tests/test_form.py::TestFormInput::test_form_incomplete_should_fail — ✅ PASSED
+INFO     root:test_login.py:12 === Mulai pengujian login ===
+INFO     root:test_login.py:13 Input data → Username: tomsmith | Password: SuperSecretPassword!
+INFO     root:test_login.py:22 ✅ Login berhasil.
+INFO     root:conftest.py:103 tests/test_login.py::test_login[tomsmith-SuperSecretPassword!-True] — ✅ PASSED
+INFO     root:test_login.py:12 === Mulai pengujian login ===
+INFO     root:test_login.py:13 Input data → Username: tomsmith | Password: wrongpass
+INFO     root:test_login.py:25 ⚠️ Login gagal sesuai harapan.
+INFO     root:conftest.py:103 tests/test_login.py::test_login[tomsmith-wrongpass-False] — ✅ PASSED
