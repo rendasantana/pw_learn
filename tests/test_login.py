@@ -12,7 +12,7 @@ def test_login(page: Page, username, password, should_succeed):
     logging.info("=== Mulai pengujian login ===")
     logging.info(f"Input data → Username: {username} | Password: {password}")
 
-    page.goto("https://the-internet.herokuapp.com/login")
+    page.goto("https://the-internet.herokuapp.com/login", wait_until="domcontentloaded", timeout=60000)
     page.fill("#username", username)
     page.fill("#password", password)
     page.click("button[type='submit']")

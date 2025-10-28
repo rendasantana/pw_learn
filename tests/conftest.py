@@ -1,90 +1,103 @@
+import os
 import pytest
 import logging
-import os
 import base64
 from datetime import datetime
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 from pytest_html import extras
-from PIL import Image, ImageDraw
 
-# === Konfigurasi logging ===
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler("reports/test_log.txt"),
-        logging.StreamHandler()
-    ]
-)
+# ========== KONFIGURASI LOGGING ==========
+@pytest.fixture(scope="session", autouse=True)
+def setup_logging():
+    Path("reports/screenshots").mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler("reports/test_log.txt", mode="w"),
+            logging.StreamHandler(),
+        ],
+    )
+    logging.info("=== Memulai sesi Playwright ===")
 
+
+# ========== FIXTURE UNTUK PLAYWRIGHT ==========
 @pytest.fixture(scope="session")
 def browser():
-    """Inisialisasi browser (1 kali per sesi test)"""
-    logging.info("=== Memulai sesi Playwright ===")
+    """Inisialisasi browser hanya sekali per sesi"""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         yield browser
         browser.close()
-    logging.info("=== Sesi Playwright selesai ===")
+
 
 @pytest.fixture
 def page(browser):
-    """Buka halaman baru untuk tiap test"""
+    """Buka tab baru untuk setiap test"""
     context = browser.new_context()
     page = context.new_page()
     yield page
     context.close()
 
-def highlight_screenshot(image_path: str, status: str):
-    """Menambahkan highlight warna ke screenshot"""
-    try:
-        img = Image.open(image_path)
-        draw = ImageDraw.Draw(img)
 
-        # Tentukan warna highlight
-        color = (0, 255, 0) if status == "passed" else (255, 0, 0)
-        width, height = img.size
-        margin = 10
-        draw.rectangle(
-            [(margin, margin), (width - margin, height - margin)],
-            outline=color,
-            width=10
-        )
-
-        # Simpan hasil dengan suffix _hl
-        highlighted_path = image_path.replace(".png", "_hl.png")
-        img.save(highlighted_path)
-        return highlighted_path
-    except Exception as e:
-        logging.error(f"Gagal menambahkan highlight: {e}")
-        return image_path
-
-
+# ========== HOOK: SCREENSHOT + HIGHLIGHT OTOMATIS ==========
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Menangkap hasil test, menambahkan log dan screenshot"""
+    """Menangkap hasil test dan menambahkan screenshot otomatis"""
     outcome = yield
     report = outcome.get_result()
+    page = item.funcargs.get("page", None)
 
-    if report.when == "call":
-        page_fixture = item.funcargs.get("page", None)
-        if page_fixture:
-            os.makedirs("reports", exist_ok=True)
-            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-            safe_name = report.nodeid.replace("/", "_").replace("::", "_")
-            screenshot_path = f"reports/{safe_name}_{timestamp}.png"
+    if page and report.when == "call":
+        screenshots_dir = Path("reports/screenshots")
+        screenshots_dir.mkdir(parents=True, exist_ok=True)
 
-            # Screenshot diambil untuk semua hasil (passed dan failed)
-            page_fixture.screenshot(path=screenshot_path)
-            status = "passed" if report.passed else "failed"
-            highlighted_path = highlight_screenshot(screenshot_path, status)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{item.name}_{timestamp}.png"
+        filepath = screenshots_dir / filename
 
-            # Tambahkan ke report HTML
-            if os.path.exists(highlighted_path):
-                with open(highlighted_path, "rb") as f:
-                    encoded = base64.b64encode(f.read()).decode("utf-8")
-                    html = f'<img src="data:image/png;base64,{encoded}" width="600"/>'
-                    report.extras = getattr(report, "extras", [])
-                    report.extras.append(extras.html(html))
+        # ========== HIGHLIGHT OTOMATIS ELEMEN ERROR ==========
+        if report.failed:
+            try:
+                error_elements = ["#flash", ".error", ".flash.error", ".alert"]
+                for selector in error_elements:
+                    if page.locator(selector).is_visible():
+                        page.evaluate(
+                            """selector => {
+                                const el = document.querySelector(selector);
+                                if (el) {
+                                    el.style.outline = '3px solid red';
+                                    el.style.transition = 'outline 0.3s ease';
+                                }
+                            }""",
+                            selector,
+                        )
+                        logging.warning(f"🔍 Highlight elemen error: {selector}")
+                        break
+            except Exception as e:
+                logging.error(f"Gagal highlight elemen error: {e}")
 
-            logging.info(f"📸 Screenshot disimpan di: {highlighted_path}")
+        # ========== SIMPAN SCREENSHOT ==========
+        if not page.is_closed():
+            try:
+                page.screenshot(path=str(filepath), full_page=True, timeout=5000)
+            except Exception as e:
+                logging.error(f"Gagal screenshot: {e}")
+        else:
+            logging.warning("Halaman sudah tertutup sebelum screenshot diambil.")
+
+
+
+        # ========== TAMBAH SCREENSHOT KE HTML REPORT ==========
+        if os.path.exists(filepath):
+            with open(filepath, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode("utf-8")
+                html = f'<div><img src="data:image/png;base64,{encoded}" width="400" style="border:1px solid #ddd; margin:5px;"/></div>'
+                extra = getattr(report, "extras", [])
+                extra.append(extras.html(html))
+                report.extras = extra
+
+        # ========== LOG HASIL TEST ==========
+        status = "✅ PASSED" if report.passed else "❌ FAILED"
+        logging.info(f"{item.nodeid} — {status}")
