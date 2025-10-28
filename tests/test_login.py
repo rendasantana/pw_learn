@@ -4,15 +4,15 @@ from playwright.sync_api import Page
 
 @pytest.mark.parametrize(
     "username,password,should_succeed", [
-        ("tomsmith", "SuperSecretPassword!", True),  # Login sukses
-        pytest.param("tomsmith", "wrongpass", False, marks=pytest.mark.xfail(reason="Login gagal sesuai harapan")),
+        ("tomsmith", "SuperSecretPassword!", True),       # Login sukses
+        pytest.param("tomsmith", "wrongpass", False, marks=pytest.mark.xfail(reason="Login gagal sesuai harapan")),  # Login gagal expected
     ]
 )
 def test_login(page: Page, username, password, should_succeed):
     logging.info("=== Mulai pengujian login ===")
     logging.info(f"Input data → Username: {username} | Password: {password}")
 
-    page.goto("https://the-internet.herokuapp.com/login", wait_until="domcontentloaded", timeout=60000)
+    page.goto("https://the-internet.herokuapp.com/login")
     page.fill("#username", username)
     page.fill("#password", password)
     page.click("button[type='submit']")
