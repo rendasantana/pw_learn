@@ -1,0 +1,11 @@
+id,username,password,expect_success,expected_url,expected_error
+valid_login,student,Password123,True,https://practicetestautomation.com/logged-in-successfully/,
+valid_login_then_logout,student,Password123,True,https://practicetestautomation.com/logged-in-successfully/,
+password_case_sensitivity_negative,student,password123,False,,Your password is invalid!
+invalid_username,wronguser,Password123,False,,Your username is invalid!
+invalid_password,student,WrongPassword,False,,Your password is invalid!
+empty_username,,Password123,False,,Your username is invalid!
+empty_password,student,,False,,Your password is invalid!
+both_empty,,,False,,Your username is invalid!
+username_with_spaces," student ",Password123,False,,Your username is invalid!
+sql_injection,"' OR 1=1 --","' OR '1'='1",False,,Your username is invalid!
