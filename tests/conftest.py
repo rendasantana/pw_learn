@@ -21,11 +21,11 @@ def setup_logging():
     )
     logging.info("=== Memulai sesi Playwright ===")
 
+logger = logging.getLogger(__name__)
 
 # ========== FIXTURE UNTUK PLAYWRIGHT ==========
 @pytest.fixture(scope="session")
 def browser():
-    """Inisialisasi browser hanya sekali per sesi"""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         yield browser
@@ -34,17 +34,28 @@ def browser():
 
 @pytest.fixture
 def page(browser):
-    """Buka tab baru untuk setiap test"""
     context = browser.new_context()
     page = context.new_page()
+
+    # ✅ Tangani popup/iklan yang sering muncul di demoqa
+    try:
+        page.goto("https://demoqa.com", timeout=10000)
+        page.evaluate(
+            """() => {
+                const closeBtns = document.querySelectorAll('#close-fixedban, .close, .popup-close');
+                closeBtns.forEach(btn => btn.click());
+            }"""
+        )
+    except Exception:
+        pass
+
     yield page
     context.close()
-
 
 # ========== HOOK: SCREENSHOT + HIGHLIGHT OTOMATIS ==========
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Menangkap hasil test dan menambahkan screenshot otomatis"""
+    """Menangkap hasil test dan menambahkan screenshot otomatis ke report"""
     outcome = yield
     report = outcome.get_result()
     page = item.funcargs.get("page", None)
@@ -55,9 +66,9 @@ def pytest_runtest_makereport(item, call):
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{item.name}_{timestamp}.png"
-        filepath = screenshots_dir / filename
+        screenshot_path = screenshots_dir / filename
 
-        # ========== HIGHLIGHT OTOMATIS ELEMEN ERROR ==========
+        # ========== HIGHLIGHT OTOMATIS JIKA GAGAL ==========
         if report.failed:
             try:
                 error_elements = ["#flash", ".error", ".flash.error", ".alert"]
@@ -68,36 +79,81 @@ def pytest_runtest_makereport(item, call):
                                 const el = document.querySelector(selector);
                                 if (el) {
                                     el.style.outline = '3px solid red';
-                                    el.style.transition = 'outline 0.3s ease';
+                                    el.scrollIntoView();
                                 }
                             }""",
                             selector,
                         )
-                        logging.warning(f"🔍 Highlight elemen error: {selector}")
+                        logger.warning(f"🔍 Highlight elemen error: {selector}")
                         break
             except Exception as e:
-                logging.error(f"Gagal highlight elemen error: {e}")
+                logger.error(f"Gagal highlight elemen error: {e}")
 
-        # ========== SIMPAN SCREENSHOT ==========
-        if not page.is_closed():
+        # ========== SIMPAN SCREENSHOT UNTUK SEMUA TEST ==========
+        try:
+            if not page.is_closed():
+                # Tunggu stabil + hindari font hang
+                page.evaluate("document.fonts.ready.then(() => console.log('Fonts ready'))")
+                page.wait_for_timeout(1500)
+
+                page.screenshot(
+                    path=screenshot_path,
+                    full_page=True,
+                    animations="disabled",
+                    timeout=5000,
+                    mask=[],
+                )
+                logger.info(f"📸 Screenshot disimpan: {screenshot_path}")
+        except Exception as e:
+            logger.error(f"Gagal mengambil screenshot: {e}")
+
+        # ========== TAMBAHKAN SCREENSHOT KE HTML REPORT ==========
+        if os.path.exists(screenshot_path):
             try:
-                page.screenshot(path=str(filepath), full_page=True, timeout=5000)
+                with open(screenshot_path, "rb") as f:
+                    encoded = base64.b64encode(f.read()).decode("utf-8")
+                    html = f'''
+                        <div style="margin:5px 0;">
+                            <a href="data:image/png;base64,{encoded}" target="_blank">
+                                <img src="data:image/png;base64,{encoded}" width="450" 
+                                     style="border:1px solid #ddd;border-radius:6px;"/>
+                            </a>
+                        </div>
+                    '''
+                    extra = getattr(report, "extras", [])
+                    extra.append(extras.html(html))
+                    report.extras = extra
             except Exception as e:
-                logging.error(f"Gagal screenshot: {e}")
-        else:
-            logging.warning("Halaman sudah tertutup sebelum screenshot diambil.")
-
-
-
-        # ========== TAMBAH SCREENSHOT KE HTML REPORT ==========
-        if os.path.exists(filepath):
-            with open(filepath, "rb") as f:
-                encoded = base64.b64encode(f.read()).decode("utf-8")
-                html = f'<div><img src="data:image/png;base64,{encoded}" width="400" style="border:1px solid #ddd; margin:5px;"/></div>'
-                extra = getattr(report, "extras", [])
-                extra.append(extras.html(html))
-                report.extras = extra
+                logger.error(f"Gagal menambahkan screenshot ke report: {e}")
 
         # ========== LOG HASIL TEST ==========
         status = "✅ PASSED" if report.passed else "❌ FAILED"
-        logging.info(f"{item.nodeid} — {status}")
+        logger.info(f"{item.nodeid} — {status}")
+
+        outcome.force_result(report)
+
+
+        # ========== HOOK TAMBAHAN UNTUK MENAMPILKAN SCREENSHOT DI REPORT HTML ==========
+        def pytest_html_results_table_header(cells):
+            cells.insert(2, html.th('Screenshot'))
+            cells.pop()
+
+        def pytest_html_results_table_row(report, cells):
+            if hasattr(report, "extras"):
+                image_html = ""
+                for extra in report.extras:
+                    if isinstance(extra, dict) and extra.get("content") and "data:image/png" in extra.get("content"):
+                        image_html = extra.get("content")
+                cells.insert(2, html.td(image_html, class_="col-screenshot"))
+            else:
+                cells.insert(2, html.td("No Image", class_="col-screenshot"))
+            cells.pop()
+
+        def pytest_html_report_title(report):
+            report.title = "Hasil Test Automation Playwright"
+
+        def pytest_html_results_table_html(report, data):
+            if hasattr(report, "extras"):
+                for extra in report.extras:
+                    if isinstance(extra, dict) and extra.get("content") and "data:image/png" in extra.get("content"):
+                        data.append(html.div(extra.get("content"), class_="screenshot"))
