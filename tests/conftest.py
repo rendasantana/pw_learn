@@ -92,16 +92,18 @@ def pytest_runtest_makereport(item, call):
         # ========== SIMPAN SCREENSHOT UNTUK SEMUA TEST ==========
         try:
             if not page.is_closed():
-                # Tunggu stabil + hindari font hang
-                page.evaluate("document.fonts.ready.then(() => console.log('Fonts ready'))")
+                # Hindari timeout "waiting for fonts to load"
+                page.evaluate("""document.fonts.ready.then(() => console.log('Fonts loaded'))""")
+                # Tambahkan jeda ringan agar elemen stabil
                 page.wait_for_timeout(1500)
 
+                # Ambil screenshot tanpa menunggu font selesai
                 page.screenshot(
                     path=screenshot_path,
                     full_page=True,
-                    animations="disabled",
                     timeout=5000,
-                    mask=[],
+                    animations="disabled",
+                    mask=[]
                 )
                 logger.info(f"📸 Screenshot disimpan: {screenshot_path}")
         except Exception as e:
@@ -109,51 +111,71 @@ def pytest_runtest_makereport(item, call):
 
         # ========== TAMBAHKAN SCREENSHOT KE HTML REPORT ==========
         if os.path.exists(screenshot_path):
-            try:
-                with open(screenshot_path, "rb") as f:
-                    encoded = base64.b64encode(f.read()).decode("utf-8")
-                    html = f'''
-                        <div style="margin:5px 0;">
-                            <a href="data:image/png;base64,{encoded}" target="_blank">
-                                <img src="data:image/png;base64,{encoded}" width="450" 
-                                     style="border:1px solid #ddd;border-radius:6px;"/>
-                            </a>
-                        </div>
-                    '''
-                    extra = getattr(report, "extras", [])
-                    extra.append(extras.html(html))
-                    report.extras = extra
-            except Exception as e:
-                logger.error(f"Gagal menambahkan screenshot ke report: {e}")
+            with open(screenshot_path, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode("utf-8")
+                html = f'<div><img src="data:image/png;base64,{encoded}" width="450" style="border:1px solid #ddd; margin:5px;"/></div>'
+                extra = getattr(report, "extras", [])
+                extra.append(extras.html(html))
+                report.extras = extra
 
         # ========== LOG HASIL TEST ==========
         status = "✅ PASSED" if report.passed else "❌ FAILED"
         logger.info(f"{item.nodeid} — {status}")
 
+        # Simpan jalur screenshot untuk hook berikutnya
+        report.screenshot_path = str(screenshot_path)
         outcome.force_result(report)
 
+# ============================================================
+# ========== TAMBAHAN UNTUK LOG DETAIL DI REPORT.HTML ==========
+# ============================================================
 
-        # ========== HOOK TAMBAHAN UNTUK MENAMPILKAN SCREENSHOT DI REPORT HTML ==========
-        def pytest_html_results_table_header(cells):
-            cells.insert(2, html.th('Screenshot'))
-            cells.pop()
+def pytest_configure(config):
+    """Ambil plugin pytest-html"""
+    global pytest_html
+    pytest_html = config.pluginmanager.getplugin("html")
 
-        def pytest_html_results_table_row(report, cells):
-            if hasattr(report, "extras"):
-                image_html = ""
-                for extra in report.extras:
-                    if isinstance(extra, dict) and extra.get("content") and "data:image/png" in extra.get("content"):
-                        image_html = extra.get("content")
-                cells.insert(2, html.td(image_html, class_="col-screenshot"))
-            else:
-                cells.insert(2, html.td("No Image", class_="col-screenshot"))
-            cells.pop()
 
-        def pytest_html_report_title(report):
-            report.title = "Hasil Test Automation Playwright"
+def pytest_html_results_table_html(report, data):
+    """
+    Tambahkan log detail (Case Type, Status, Reason) + screenshot
+    """
+    if hasattr(report, "result_data"):  # dari file test (item.result_data)
+        result = report.result_data
+        html_block = f"""
+        <div style='margin:10px 0;padding:8px;background:#f8f9fa;border-radius:8px;'>
+            <b>Case Type:</b> {result.get('case_type', '-')}<br>
+            <b>Status:</b> {result.get('status', '-')}<br>
+            <b>Reason:</b> {result.get('reason', '-')}<br>
+        </div>
+        """
+        data.append(html_block)
 
-        def pytest_html_results_table_html(report, data):
-            if hasattr(report, "extras"):
-                for extra in report.extras:
-                    if isinstance(extra, dict) and extra.get("content") and "data:image/png" in extra.get("content"):
-                        data.append(html.div(extra.get("content"), class_="screenshot"))
+    # Jika screenshot disimpan sebelumnya
+    if hasattr(report, "screenshot_path") and os.path.exists(report.screenshot_path):
+        rel_path = os.path.relpath(report.screenshot_path, os.getcwd())
+        img_html = f"<img src='{rel_path}' style='width:600px;border:1px solid #ddd;margin:10px 0;'>"
+        data.append(img_html)
+
+
+def pytest_html_report_title(report):
+    report.title = "Hasil Test Automation Playwright - DemoQA"
+
+
+def pytest_html_results_table_header(cells):
+    """Tambahkan kolom baru di header tabel HTML report."""
+    cells.insert(1, "<th>Result</th>")
+
+def pytest_html_results_table_row(report, cells):
+    """Tambahkan kolom hasil berwarna untuk setiap test."""
+    if report.when == "call":
+        if report.failed:
+            status_html = "<td style='background-color:#ffcccc;font-weight:bold;'>❌ FAILED</td>"
+        elif report.passed:
+            status_html = "<td style='background-color:#ccffcc;font-weight:bold;'>✅ PASSED</td>"
+        elif report.skipped:
+            status_html = "<td style='background-color:#ffffcc;font-weight:bold;'>⚠️ SKIPPED</td>"
+        else:
+            status_html = "<td>UNKNOWN</td>"
+        cells.insert(1, status_html)
+

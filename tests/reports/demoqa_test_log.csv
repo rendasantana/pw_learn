@@ -1,30 +1,91 @@
-row_index,name,status,attempts,screenshot,case_type
-0,Renda,Success,2.0,reports/screenshots/demoqa_row0_success_attempt2.png,
-1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,
-0,Renda,Success,1.0,reports/screenshots/demoqa_row0_success_attempt1.png,
-1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,
-0,Renda,Success,1.0,reports/screenshots/demoqa_row0_success_attempt1.png,
-1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,
-0,Renda,Success,1.0,reports/screenshots/demoqa_row0_success_attempt1.png,
-1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,
-0,Andi,Success,,pw_learn/screenshoots/demoqa_row0_Andi.png,positive
-1,Budi,Success,,pw_learn/screenshoots/demoqa_row1_Budi.png,positive
-2,Citra,Success,,pw_learn/screenshoots/demoqa_row2_Citra.png,positive
-0,Andi,Success,,pw_learn/screenshoots/demoqa_row0_Andi.png,positive
-1,Budi,Success,,pw_learn/screenshoots/demoqa_row1_Budi.png,positive
-2,Citra,Success,,pw_learn/screenshoots/demoqa_row2_Citra.png,positive
-0,Andi,Success,,pw_learn/screenshoots/demoqa_row0_Andi.png,positive
-1,Budi,Success,,pw_learn/screenshoots/demoqa_row1_Budi.png,positive
-2,Citra,Success,,pw_learn/screenshoots/demoqa_row2_Citra.png,positive
-0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive
-1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive
-2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive
-0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive
-1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive
-2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive
-0,Andi,Success,,,positive
-1,Budi,Success,,,positive
-2,Citra,Success,,,positive
-0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi_20251030_135601.png,positive
-1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi_20251030_135611.png,positive
-2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra_20251030_135621.png,positive
+row_index,name,status,attempts,screenshot,case_type,reason
+0,Renda,Success,2.0,reports/screenshots/demoqa_row0_success_attempt2.png,,
+1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,,
+0,Renda,Success,1.0,reports/screenshots/demoqa_row0_success_attempt1.png,,
+1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,,
+0,Renda,Success,1.0,reports/screenshots/demoqa_row0_success_attempt1.png,,
+1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,,
+0,Renda,Success,1.0,reports/screenshots/demoqa_row0_success_attempt1.png,,
+1,Budi,Success,1.0,reports/screenshots/demoqa_row1_success_attempt1.png,,
+0,Andi,Success,,pw_learn/screenshoots/demoqa_row0_Andi.png,positive,
+1,Budi,Success,,pw_learn/screenshoots/demoqa_row1_Budi.png,positive,
+2,Citra,Success,,pw_learn/screenshoots/demoqa_row2_Citra.png,positive,
+0,Andi,Success,,pw_learn/screenshoots/demoqa_row0_Andi.png,positive,
+1,Budi,Success,,pw_learn/screenshoots/demoqa_row1_Budi.png,positive,
+2,Citra,Success,,pw_learn/screenshoots/demoqa_row2_Citra.png,positive,
+0,Andi,Success,,pw_learn/screenshoots/demoqa_row0_Andi.png,positive,
+1,Budi,Success,,pw_learn/screenshoots/demoqa_row1_Budi.png,positive,
+2,Citra,Success,,pw_learn/screenshoots/demoqa_row2_Citra.png,positive,
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive,
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive,
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive,
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive,
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive,
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive,
+0,Andi,Success,,,positive,
+1,Budi,Success,,,positive,
+2,Citra,Success,,,positive,
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi_20251030_135601.png,positive,
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi_20251030_135611.png,positive,
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra_20251030_135621.png,positive,
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive,
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive,
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive,
+3,Dodi,Expected Fail,,pw_learn/screenshots/demoqa_row3_Dodi.png,negative,
+4,Toni,Expected Fail,,pw_learn/screenshots/demoqa_row4_Toni.png,negative,
+5,Lina,Expected Fail,,pw_learn/screenshots/demoqa_row5_Lina.png,negative,
+6,Yudi,Expected Fail,,pw_learn/screenshots/demoqa_row6_Yudi.png,negative,
+7,Sinta,Expected Fail,,pw_learn/screenshots/demoqa_row7_Sinta.png,negative,
+8,Reno,Expected Fail,,pw_learn/screenshots/demoqa_row8_Reno.png,negative,
+9,Ayu,Expected Fail,,pw_learn/screenshots/demoqa_row9_Ayu.png,negative,
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive,Output muncul sesuai harapan.
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive,Output muncul sesuai harapan.
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive,Output muncul sesuai harapan.
+3,Dodi,Expected Fail,,pw_learn/screenshots/demoqa_row3_Dodi.png,negative,"Email invalid, form ditolak seperti harapan."
+4,Toni,Expected Fail,,pw_learn/screenshots/demoqa_row4_Toni.png,negative,"Email invalid, form ditolak seperti harapan."
+5,Lina,Expected Fail,,pw_learn/screenshots/demoqa_row5_Lina.png,negative,"Email invalid, form ditolak seperti harapan."
+6,Yudi,Expected Fail,,pw_learn/screenshots/demoqa_row6_Yudi.png,negative,"Email invalid, form ditolak seperti harapan."
+7,Sinta,Expected Fail,,pw_learn/screenshots/demoqa_row7_Sinta.png,negative,"Email invalid, form ditolak seperti harapan."
+8,Reno,Expected Fail,,pw_learn/screenshots/demoqa_row8_Reno.png,negative,"Email invalid, form ditolak seperti harapan."
+9,Ayu,Expected Fail,,pw_learn/screenshots/demoqa_row9_Ayu.png,negative,"Email invalid, form ditolak seperti harapan."
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive,Output muncul sesuai harapan.
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive,Output muncul sesuai harapan.
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive,Output muncul sesuai harapan.
+3,Dodi,Expected Fail,,pw_learn/screenshots/demoqa_row3_Dodi.png,negative,"Email invalid, form ditolak seperti harapan."
+4,Toni,Expected Fail,,pw_learn/screenshots/demoqa_row4_Toni.png,negative,"Email invalid, form ditolak seperti harapan."
+5,Lina,Expected Fail,,pw_learn/screenshots/demoqa_row5_Lina.png,negative,"Email invalid, form ditolak seperti harapan."
+6,Yudi,Expected Fail,,pw_learn/screenshots/demoqa_row6_Yudi.png,negative,"Email invalid, form ditolak seperti harapan."
+7,Sinta,Expected Fail,,pw_learn/screenshots/demoqa_row7_Sinta.png,negative,"Email invalid, form ditolak seperti harapan."
+8,Reno,Expected Fail,,pw_learn/screenshots/demoqa_row8_Reno.png,negative,"Email invalid, form ditolak seperti harapan."
+9,Ayu,Expected Fail,,pw_learn/screenshots/demoqa_row9_Ayu.png,negative,"Email invalid, form ditolak seperti harapan."
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi.png,positive,Output muncul sesuai harapan.
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi.png,positive,Output muncul sesuai harapan.
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra.png,positive,Output muncul sesuai harapan.
+3,Dodi,Expected Fail,,pw_learn/screenshots/demoqa_row3_Dodi.png,negative,"Email invalid, form ditolak seperti harapan."
+4,Toni,Expected Fail,,pw_learn/screenshots/demoqa_row4_Toni.png,negative,"Email invalid, form ditolak seperti harapan."
+5,Lina,Expected Fail,,pw_learn/screenshots/demoqa_row5_Lina.png,negative,"Email invalid, form ditolak seperti harapan."
+6,Yudi,Expected Fail,,pw_learn/screenshots/demoqa_row6_Yudi.png,negative,"Email invalid, form ditolak seperti harapan."
+7,Sinta,Expected Fail,,pw_learn/screenshots/demoqa_row7_Sinta.png,negative,"Email invalid, form ditolak seperti harapan."
+8,Reno,Expected Fail,,pw_learn/screenshots/demoqa_row8_Reno.png,negative,"Email invalid, form ditolak seperti harapan."
+9,Ayu,Expected Fail,,pw_learn/screenshots/demoqa_row9_Ayu.png,negative,"Email invalid, form ditolak seperti harapan."
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi_20251030_152446.png,positive,Output muncul sesuai harapan.
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi_20251030_152503.png,positive,Output muncul sesuai harapan.
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra_20251030_152521.png,positive,Output muncul sesuai harapan.
+3,Dodi,Expected Fail,,pw_learn/screenshots/demoqa_row3_Dodi_20251030_152538.png,negative,"Email invalid, form ditolak seperti harapan."
+4,Toni,Expected Fail,,pw_learn/screenshots/demoqa_row4_Toni_20251030_152555.png,negative,"Email invalid, form ditolak seperti harapan."
+5,Lina,Expected Fail,,pw_learn/screenshots/demoqa_row5_Lina_20251030_152613.png,negative,"Email invalid, form ditolak seperti harapan."
+6,Yudi,Expected Fail,,pw_learn/screenshots/demoqa_row6_Yudi_20251030_152630.png,negative,"Email invalid, form ditolak seperti harapan."
+7,Sinta,Expected Fail,,pw_learn/screenshots/demoqa_row7_Sinta_20251030_152648.png,negative,"Email invalid, form ditolak seperti harapan."
+8,Reno,Expected Fail,,pw_learn/screenshots/demoqa_row8_Reno_20251030_152705.png,negative,"Email invalid, form ditolak seperti harapan."
+9,Ayu,Expected Fail,,pw_learn/screenshots/demoqa_row9_Ayu_20251030_152722.png,negative,"Email invalid, form ditolak seperti harapan."
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi_20251030_154847.png,positive,Output muncul sesuai harapan.
+1,Budi,Success,,pw_learn/screenshots/demoqa_row1_Budi_20251030_154906.png,positive,Output muncul sesuai harapan.
+2,Citra,Success,,pw_learn/screenshots/demoqa_row2_Citra_20251030_154923.png,positive,Output muncul sesuai harapan.
+3,Dodi,Expected Fail,,pw_learn/screenshots/demoqa_row3_Dodi_20251030_154940.png,negative,"Email invalid, form ditolak seperti harapan."
+4,Toni,Expected Fail,,pw_learn/screenshots/demoqa_row4_Toni_20251030_154958.png,negative,"Email invalid, form ditolak seperti harapan."
+5,Lina,Expected Fail,,pw_learn/screenshots/demoqa_row5_Lina_20251030_155015.png,negative,"Email invalid, form ditolak seperti harapan."
+6,Yudi,Expected Fail,,pw_learn/screenshots/demoqa_row6_Yudi_20251030_155033.png,negative,"Email invalid, form ditolak seperti harapan."
+7,Sinta,Expected Fail,,pw_learn/screenshots/demoqa_row7_Sinta_20251030_155050.png,negative,"Email invalid, form ditolak seperti harapan."
+8,Reno,Expected Fail,,pw_learn/screenshots/demoqa_row8_Reno_20251030_155107.png,negative,"Email invalid, form ditolak seperti harapan."
+9,Ayu,Expected Fail,,pw_learn/screenshots/demoqa_row9_Ayu_20251030_155128.png,negative,"Email invalid, form ditolak seperti harapan."
+0,Andi,Success,,pw_learn/screenshots/demoqa_row0_Andi_20251030_162614.png,positive,Output muncul sesuai harapan.

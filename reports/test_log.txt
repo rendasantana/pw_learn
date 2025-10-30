@@ -1,7 +1,21 @@
 INFO     root:conftest.py:22 === Memulai sesi Playwright ===
-INFO     tests.conftest:conftest.py:106 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[0]_20251030_135603.png
-INFO     tests.conftest:conftest.py:131 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[0] — ✅ PASSED
-INFO     tests.conftest:conftest.py:106 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[1]_20251030_135613.png
-INFO     tests.conftest:conftest.py:131 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[1] — ✅ PASSED
-INFO     tests.conftest:conftest.py:106 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[2]_20251030_135623.png
-INFO     tests.conftest:conftest.py:131 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[2] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[0]_20251030_172655.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[0] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[1]_20251030_172731.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[1] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[2]_20251030_172854.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[2] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[3]_20251030_173020.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[3] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[4]_20251030_173142.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[4] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[5]_20251030_173308.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[5] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[6]_20251030_173438.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[6] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[7]_20251030_173602.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[7] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[8]_20251030_173732.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[8] — ✅ PASSED
+INFO     tests.conftest:conftest.py:108 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[9]_20251030_173855.png
+INFO     tests.conftest:conftest.py:123 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[9] — ✅ PASSED
