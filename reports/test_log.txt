@@ -1,1 +1,7 @@
 INFO     root:conftest.py:22 === Memulai sesi Playwright ===
+INFO     tests.conftest:conftest.py:106 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[0]_20251030_135603.png
+INFO     tests.conftest:conftest.py:131 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[0] — ✅ PASSED
+INFO     tests.conftest:conftest.py:106 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[1]_20251030_135613.png
+INFO     tests.conftest:conftest.py:131 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[1] — ✅ PASSED
+INFO     tests.conftest:conftest.py:106 📸 Screenshot disimpan: reports/screenshots/test_demoqa_form_highlight[2]_20251030_135623.png
+INFO     tests.conftest:conftest.py:131 tests/test_product_form_demoqa_highlight.py::test_demoqa_form_highlight[2] — ✅ PASSED

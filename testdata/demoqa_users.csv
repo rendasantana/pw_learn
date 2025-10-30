@@ -1,0 +1,11 @@
+name,email,current_address,permanent_address,case_type
+Andi,andi@example.com,Jl. Merdeka 10,Jl. Merdeka 10,positive
+Budi,budi.test@example.org,Jl. Veteran 22,Jl. Veteran 22,positive
+Citra,citra123@example.co.id,Jl. Ijen 5,Jl. Ijen 5,positive
+Dodi,invalidemail.com,Jl. Diponegoro 12,Jl. Diponegoro 12,negative
+Toni,toni@example,Jl. Tugu Selatan,Jl. Tugu Selatan,negative
+Lina,lina@.com,Jl. Sukun,Jl. Sukun,negative
+Yudi,@example.com,Jl. Bandung,Jl. Bandung,negative
+Sinta,sintaexample.com,Jl. Kauman,Jl. Kauman,negative
+Reno,reno@domain.,Jl. Bondowoso,Jl. Bondowoso,negative
+Ayu,ayu@@domain.com,Jl. Gajayana,Jl. Gajayana,negative
