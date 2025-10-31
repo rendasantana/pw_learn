@@ -179,3 +179,4 @@ def pytest_html_results_table_row(report, cells):
             status_html = "<td>UNKNOWN</td>"
         cells.insert(1, status_html)
 
+

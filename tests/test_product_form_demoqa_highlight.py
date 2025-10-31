@@ -249,3 +249,75 @@ def pytest_runtest_makereport(item, call):
                 Screenshot: {result_data['screenshot']}
                 """
             ))
+
+
+import io
+import logging
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Gabungan hook: simpan log terminal + result_data ke report HTML."""
+    outcome = yield
+    report = outcome.get_result()
+
+    # Tangkap log terminal (print/logging)
+    captured = ""
+    if hasattr(call, "caplog_text"):
+        captured += call.caplog_text
+    if hasattr(call, "capstdout") and getattr(call.capstdout, "text", None):
+        captured += call.capstdout.text
+    if hasattr(call, "capstderr") and getattr(call.capstderr, "text", None):
+        captured += call.capstderr.text
+    report.captured_log = captured.strip()
+
+    # Simpan result_data (hasil test kamu)
+    if call.when == "call":
+        result_data = getattr(item, "result_data", None)
+        if result_data:
+            report.result_data = result_data
+            # Juga tambahkan ke sections agar muncul di bagian bawah default log pytest-html
+            report.sections.append((
+                "Result Log",
+                f"Nama: {result_data['name']}\n"
+                f"Case Type: {result_data['case_type']}\n"
+                f"Status: {result_data['status']}\n"
+                f"Reason: {result_data['reason']}\n"
+                f"Screenshot: {result_data['screenshot']}\n"
+            ))
+
+
+def pytest_html_results_table_html(report, data):
+    """Gabungan HTML: tampilkan log terminal + hasil case + screenshot."""
+    html_parts = []
+
+    # Tampilkan hasil test utama
+    if hasattr(report, "result_data"):
+        result = report.result_data
+        html_parts.append(f"""
+        <div style='margin:10px 0; padding:10px; border:1px solid #ccc; border-radius:8px;'>
+            <b>Nama:</b> {result['name']}<br>
+            <b>Case Type:</b> {result['case_type']}<br>
+            <b>Status:</b> {result['status']}<br>
+            <b>Reason:</b> {result['reason']}<br>
+        </div>
+        """)
+
+        if result.get("screenshot") and os.path.exists(result["screenshot"]):
+            rel_path = os.path.relpath(result["screenshot"], os.getcwd())
+            html_parts.append(
+                f"<img src='{rel_path}' style='width:600px;border:1px solid #ccc;margin-top:5px;'>"
+            )
+
+    # Tambahkan log terminal jika ada
+    if hasattr(report, "captured_log") and report.captured_log:
+        log_html = report.captured_log.replace("\n", "<br>")
+        html_parts.append(f"""
+        <div style="margin-top:10px;padding:10px;background:#f5f5f5;border-radius:6px;">
+            <b>🧾 Terminal Log:</b><br>
+            <code style="font-size:13px;white-space:pre-wrap;">{log_html}</code>
+        </div>
+        """)
+
+    # Gabungkan semuanya ke report HTML
+    if html_parts:
+        data.append("".join(html_parts))
